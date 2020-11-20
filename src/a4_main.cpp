@@ -179,7 +179,7 @@ void testBilaterial()
 int main()
 {
     // uncomment these test functions as you complete the assignment
-    // try {testSmartAccessor();}      catch(...) { cout << "EXCEPTION: Smart Accessor failed" << endl; }
+    //try {testSmartAccessor();}      catch(...) { cout << "EXCEPTION: Smart Accessor failed" << endl; }
     //try {testBoxBlur(); }           catch(...) { cout << "EXCEPTION: Box Blur failed" << endl; }
     //try {testShiftedImpulse();}     catch(...) { cout << "EXCEPTION: Box Blur failed" << endl; }
     //try {testGradient();}           catch(...) { cout << "EXCEPTION: Box Blur failed" << endl; }

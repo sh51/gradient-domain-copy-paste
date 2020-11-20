@@ -92,17 +92,27 @@ inline T & Array3D<T>::operator()(int x, int y, int z)
 template <typename T>
 inline const T & Array3D<T>::operator()(int i) const
 {
+<<<<<<< HEAD
 	// throw OutOfBoundsException if i is negative or larger than the array size
 	if (!size() || i < 0 || i >= size()) throw OutOfBoundsException();
 	return m_data[i];
+=======
+	return m_data[0]; /*Remove this line*/
+	// Implement me!
+>>>>>>> 48ba83b0fe718b1c03e0cedaee0042c258004e23
 }
 
 template <typename T>
 inline const T & Array3D<T>::operator()(int x, int y, int z) const
 {
+<<<<<<< HEAD
 	// no valid input for empty arrays
 	if (!size() || x < 0 || y < 0 || z < 0 || x >= sizeX() || y >= sizeY() || z >= sizeZ()) throw OutOfBoundsException();
 	return m_data[x * (sizeY() * sizeZ()) + y * sizeZ() + z];
+=======
+	return m_data[0]; /*Remove this line*/
+	// Implement me!
+>>>>>>> 48ba83b0fe718b1c03e0cedaee0042c258004e23
 }
 
 // ********************************************************//
