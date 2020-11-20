@@ -90,7 +90,17 @@ FloatImage &FloatImage::operator=(const FloatImage &in)
 // nearest pixel value (clampToEdge = true) when indexing out of the bounds of the image
 float FloatImage::smartAccessor(int x, int y, int z, bool clampToEdge) const
 {
-	return 0.0f; // CHANGEME
+		if (clampToEdge)
+    {
+        x = clamp(x, 0, width() - 1);
+        y = clamp(y, 0, height() - 1);
+    }
+    else
+    {
+        if (x < 0 || x >= width() || y < 0 || y >= height())
+            return 0.0f;
+    }
+    return operator()(x, y, z);
 }
 
 void FloatImage::clear(const vector<float> &channelValues)

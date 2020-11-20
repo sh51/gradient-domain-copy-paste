@@ -5,9 +5,6 @@
     
     CS 73/273 Computational Aspects of Digital Photography C++ basecode.
 */
-
-/* Replace this file with the one that includes your implementations in assignment 1 */
-
 #pragma once
 
 #include <vector>
@@ -78,31 +75,34 @@ inline Array3D<T>::Array3D(int sizeX, int sizeY, int sizeZ) :
 template <typename T>
 inline T & Array3D<T>::operator()(int i)
 {
-	return m_data[0]; /*Remove this line*/
-	// return the element at location i, where i spans all X, Y, and Z dimensions of the array
-	// throw OutOfBoundsException if i is negative or larger than the max index in the array
+	// throw OutOfBoundsException if i is negative or larger than the array size
+	if (!size() || i < 0 || i >= size()) throw OutOfBoundsException();
+	return m_data[i];
 }
 
 template <typename T>
 inline T & Array3D<T>::operator()(int x, int y, int z)
 {
-	return m_data[0]; /*Remove this line*/
-	// Return the value in x,y,z and throw out of bounds if the input is invalid
+	// no valid input for empty arrays
+	if (!size() || x < 0 || y < 0 || z < 0 || x >= sizeX() || y >= sizeY() || z >= sizeZ()) throw OutOfBoundsException();
+	return m_data[x * (sizeY() * sizeZ()) + y * sizeZ() + z];
 }
 
 // The next two functions should have the same implementation as the previous two
 template <typename T>
 inline const T & Array3D<T>::operator()(int i) const
 {
-	return m_data[0]; /*Remove this line*/
-	// Implement me!
+	// throw OutOfBoundsException if i is negative or larger than the array size
+	if (!size() || i < 0 || i >= size()) throw OutOfBoundsException();
+	return m_data[i];
 }
 
 template <typename T>
 inline const T & Array3D<T>::operator()(int x, int y, int z) const
 {
-	return m_data[0]; /*Remove this line*/
-	// Implement me!
+	// no valid input for empty arrays
+	if (!size() || x < 0 || y < 0 || z < 0 || x >= sizeX() || y >= sizeY() || z >= sizeZ()) throw OutOfBoundsException();
+	return m_data[x * (sizeY() * sizeZ()) + y * sizeZ() + z];
 }
 
 // ********************************************************//
