@@ -262,107 +262,115 @@ void testBlend(){
 	map<unsigned int, unsigned int> varMap;
 	{
 		int number=0;
-		for(int x=0;x<maskImage.sizeX();x++){
-			for(int y=0;y<maskImage.sizeY();y++){
+		for(int x=0;x<maskImage.width();x++){
+			for(int y=0;y<maskImage.height();y++){
 				//white part of the mask
-				if(maskImage(x,y,0)>0.9f){
-					varMap[x*maskImage.width()+y]=number;
+				if(maskImage(x,y,0)>0.99f){
+					varMap[y*maskImage.width()+x]=number;
 					number++;
 				}
 			}
 		}
 	}
-	cout<<"line:275"<<endl;
-
 
 	//construct sparse matrix M in Mx = b
 	vector<Triplet> mt;
 	{	
-		for(int i=0;i<varMap.size();i++)
-		{
-			for(int x=0;x<maskImage.sizeX();x++){
-				for(int y=0;y<maskImage.sizeY();y++){
+		
+		int i=0;		
+		for(int x=0;x<maskImage.width();x++){
+			for(int y=0;y<maskImage.height();y++){
 
-					int j=x*maskImage.width()+y;
+				int j=y*maskImage.width()+x;
 
-					if(maskImage(x,y,0)>0.9f){
-						mt.push_back(Triplet(i,varMap[j],4));
-					}
-
-					if(maskImage(x+1,y,0)>0.9f){
+				if(maskImage(x,y,0)>0.99f){
+					mt.push_back(Triplet(i,varMap[j],4));
+				
+					if(maskImage(x+1,y,0)>0.99f){
 						mt.push_back(Triplet(i,varMap[j+1],-1));
 					}
-					if(maskImage(x-1,y,0)>0.9f){
+					if(maskImage(x-1,y,0)>0.99f){
 						mt.push_back(Triplet(i,varMap[j-1],-1));
 					}
-					if(maskImage(x,y+1,0)>0.9f){
+					if(maskImage(x,y+1,0)>0.99f){
 						mt.push_back(Triplet(i,varMap[j+maskImage.width()],-1));
 					}
-					if(maskImage(x,y-1,0)>0.9f){
+					if(maskImage(x,y-1,0)>0.99f){
 						mt.push_back(Triplet(i,varMap[j-maskImage.width()],-1));
 					}
-
+					i++;
 				}
-			}
-		}
-	}
-	cout<<"line:309"<<endl;
 
-	Eigen::SimplicialCholesky<SpMatrix> slover;
+			}
+		}				
+	}
+	
+	
+
+	Eigen::SimplicialCholesky<SpMatrix> solver;
 	{
 		SpMatrix mat(varMap.size(),varMap.size());
 		mat.setFromTriplets(mt.begin(),mt.end());
-		slover.compute(mat);
+		//cout<<mat<<endl;
+		solver.compute(mat);		
 	}
+	
+
 
 	//construct b
 	VectorD b(varMap.size());
 	VectorD sol[3];
-	for(int ic=0;ic<3;ic++){
-		for(int i=0;i<varMap.size();i++){
-			for(int x=0;x<maskImage.sizeX();x++){
-				for(int y=0;y<maskImage.sizeY();y++){
-					if(maskImage(x,y,ic)>0.9f){
-						//graident from source image
-						float pixel=4*sourceImage(x,y,ic)-sourceImage(x-1,y,ic)-sourceImage(x+1,y,ic)
-									-sourceImage(x,y-1,ic)-sourceImage(x,y+1,ic);
+	for(int ic=0;ic<3;ic++){		
+		int i=0;
 
-						//add boundary from target image
-						if(maskImage(x+1,y,ic)<0.1f){
-							pixel+=targetImage(x+1,y,ic);
-						}
-						if(maskImage(x-1,y,ic)<0.1f){
-							pixel+=targetImage(x+1,y,ic);
-						}
-						if(maskImage(x,y+1,ic)<0.1f){
-							pixel+=targetImage(x+1,y,ic);
-						}
-						if(maskImage(x,y-1,ic)<0.1f){
-							pixel+=targetImage(x+1,y,ic);
-						}
-						b[i]=pixel;
+		for(int x=0;x<maskImage.width();x++){
+			for(int y=0;y<maskImage.height();y++){
+				if(maskImage(x,y,ic)>0.99f){
+					//graident from source image
+					float pixel=4*sourceImage(x,y,ic)-sourceImage(x-1,y,ic)-sourceImage(x+1,y,ic)
+								-sourceImage(x,y-1,ic)-sourceImage(x,y+1,ic);
+
+					//add boundary from target image
+					if(maskImage(x+1,y,ic)<0.1f){
+						pixel+=targetImage(x+1,y,ic);
 					}
-				}				
+					if(maskImage(x-1,y,ic)<0.1f){
+						pixel+=targetImage(x-1,y,ic);
+					}
+					if(maskImage(x,y+1,ic)<0.1f){
+						pixel+=targetImage(x,y+1,ic);
+					}
+					if(maskImage(x,y-1,ic)<0.1f){
+						pixel+=targetImage(x,y-1,ic);
+					}
+					b[i]=pixel;
+					i++;
+				}
 			}
 		}
+	
 		//solve x and save each channel in sol
-		sol[ic]=slover.solve(b);
+		sol[ic]=solver.solve(b);
 	}
-	cout<<"line:351"<<endl;
+	//cout<<sol[0]<<endl;
 
 	//write image to output
-	FloatImage output(maskImage.sizeX(),maskImage.sizeY(),3);
+	FloatImage output(maskImage.width(),maskImage.height(),3);
 	for (int ic = 0; ic < 3; ic++){
-		for (int x = 0; x < maskImage.sizeX(); x++){
-			for (int y = 0; y < maskImage.sizeY(); y++){
-				auto value=sol[ic][x*maskImage.width()+y];
-				
-				output(x,y,ic)=clamp(value,0.,1.);
-
+		for (int x = 0; x < maskImage.width(); x++){
+			for (int y = 0; y < maskImage.height(); y++){
+				if(maskImage(x,y,0)<0.1f){
+					output(x,y,ic)=targetImage(x,y,ic);
+				}else{
+					int j=y*maskImage.width()+x;
+					auto value=sol[ic][varMap[j]];
+					output(x,y,ic)=clamp(value,0.,1.);
+					//output(x,y,ic)=sourceImage(x,y,ic);
+				}				
 			}			
 		}		
 	}
-	output.write(DATA_DIR "/output/gdcp.png");
+	output.write(DATA_DIR "/output/gdcp_1.png");
 
 }
 
