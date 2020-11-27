@@ -284,6 +284,171 @@ segsAfter.push_back(Segment(289, 264, 290, 275));
 }
 
 //poisson blending
+void testMixedBlend(){
+
+	//load images	
+	FloatImage sourceImage(DATA_DIR "/input/a6/source_t.png");
+	FloatImage targetImage(DATA_DIR "/input/a6/target_t.png");
+	FloatImage maskImage(DATA_DIR "/input/a6/mask_t.png");
+	FloatImage targetImage_copy=targetImage;
+	// sourceImage=log10FloatImage(sourceImage);
+	// targetImage=log10FloatImage(targetImage);
+	
+
+
+	//check if three images have the same dimension
+
+
+	//save every pixel inside the mask into a map
+	//map(pixel,int number)
+	map<unsigned int, unsigned int> varMap;
+	{
+		int number=0;
+		for(int x=0;x<maskImage.width();x++){
+			for(int y=0;y<maskImage.height();y++){
+				//white part of the mask
+				if(maskImage(x,y,0)>0.9f){
+					varMap[y*maskImage.width()+x]=number;
+					number++;
+				}
+			}
+		}
+	}
+
+
+	//construct sparse matrix M in Mx = b
+	vector<Triplet> mt;
+	{			
+		int i=0;		
+
+		for(int x=0;x<maskImage.width();x++){
+			for(int y=0;y<maskImage.height();y++){
+				
+				if(maskImage(x,y,0)>0.9f){
+					int j=y*maskImage.width()+x;
+					mt.push_back(Triplet(i,varMap[j],4));
+				
+					if(maskImage(x+1,y,0)>0.9f){
+						mt.push_back(Triplet(i,varMap[j+1],-1));
+					}
+					if(maskImage(x-1,y,0)>0.9f){
+						mt.push_back(Triplet(i,varMap[j-1],-1));
+					}
+					if(maskImage(x,y+1,0)>0.9f){
+						mt.push_back(Triplet(i,varMap[j+maskImage.width()],-1));
+					}
+					if(maskImage(x,y-1,0)>0.9f){
+						mt.push_back(Triplet(i,varMap[j-maskImage.width()],-1));
+					}
+					i++;
+				}
+
+			}
+		}	
+
+	}
+	
+	
+
+	Eigen::SimplicialCholesky<SpMatrix> solver;
+	{
+		SpMatrix mat(varMap.size(),varMap.size());
+		mat.setFromTriplets(mt.begin(),mt.end());
+		//cout<<mat<<endl;
+		solver.compute(mat);		
+	}
+	
+
+
+	//construct b
+	VectorD b(varMap.size());
+	VectorD sol[3];
+	for(int ic=0;ic<3;ic++){		
+		int i=0;
+		for(int x=0;x<maskImage.width();x++){
+			for(int y=0;y<maskImage.height();y++){
+
+
+				if(maskImage(x,y,ic)>0.9f){
+					//graident from source image
+					float pixel=0.f;
+					// float pixel_s=4*sourceImage(x,y,ic)-sourceImage(x-1,y,ic)-sourceImage(x+1,y,ic)
+					// 			-sourceImage(x,y-1,ic)-sourceImage(x,y+1,ic);		
+					//pixel=pixel_t;			
+					if(abs(sourceImage(x,y,ic)-sourceImage(x-1,y,ic))<abs(targetImage(x,y,ic)-targetImage(x-1,y,ic))){
+						pixel+=targetImage(x,y,ic)-targetImage(x-1,y,ic);
+					}else{
+						pixel+=sourceImage(x,y,ic)-sourceImage(x-1,y,ic);
+					}
+
+					if(abs(sourceImage(x,y,ic)-sourceImage(x+1,y,ic))<abs(targetImage(x,y,ic)-targetImage(x+1,y,ic))){
+						pixel+=targetImage(x,y,ic)-targetImage(x+1,y,ic);
+					}else{
+						pixel+=sourceImage(x,y,ic)-sourceImage(x+1,y,ic);
+					}
+
+					if(abs(sourceImage(x,y,ic)-sourceImage(x,y-1,ic))<abs(targetImage(x,y,ic)-targetImage(x,y-1,ic))){
+						pixel+=targetImage(x,y,ic)-targetImage(x,y-1,ic);
+					}else{
+						pixel+=sourceImage(x,y,ic)-sourceImage(x,y-1,ic);
+					}
+
+					if(abs(sourceImage(x,y,ic)-sourceImage(x,y+1,ic))<abs(targetImage(x,y,ic)-targetImage(x,y+1,ic))){
+						pixel+=targetImage(x,y,ic)-targetImage(x,y+1,ic);
+					}else{
+						pixel+=sourceImage(x,y,ic)-sourceImage(x,y+1,ic);
+					}
+					
+
+					//add boundary from target image
+					if(maskImage(x+1,y,ic)<0.1f){
+						pixel+=targetImage(x+1,y,ic);
+					}
+					if(maskImage(x-1,y,ic)<0.1f){
+						pixel+=targetImage(x-1,y,ic);
+					}
+					if(maskImage(x,y+1,ic)<0.1f){
+						pixel+=targetImage(x,y+1,ic);
+					}
+					if(maskImage(x,y-1,ic)<0.1f){
+						pixel+=targetImage(x,y-1,ic);
+					}
+					b[i]=pixel;
+					i++;
+				}
+
+
+			}
+		}	
+		//solve x and save each channel in sol
+		sol[ic]=solver.solve(b);
+	}
+
+
+	//write image to output
+	FloatImage output(maskImage.width(),maskImage.height(),3);
+	
+	for (int ic = 0; ic < 3; ic++){
+		for (int x = 0; x < maskImage.width(); x++){
+			for (int y = 0; y < maskImage.height(); y++){
+				if(maskImage(x,y,0)<0.1f){
+					output(x,y,ic)=targetImage_copy(x,y,ic);
+				}else{
+					int j=y*maskImage.width()+x;
+					//float value=(float)pow(10,sol[ic][varMap[j]]);
+					float value=(float)sol[ic][varMap[j]];
+					output(x,y,ic)=clamp(value,0.f,1.f);
+					//output(x,y,ic)=value;
+					//output(x,y,ic)=sourceImage(x,y,ic);
+				}				
+			}			
+		}		
+	}
+	
+	output.write(DATA_DIR "/output/gradient_linear_t_mixed.png");
+}
+
+//poisson blending
 void testBlend(){
 
 	//load images	
