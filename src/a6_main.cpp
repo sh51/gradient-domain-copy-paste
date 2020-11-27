@@ -9,7 +9,45 @@ typedef Eigen::VectorXd VectorD;
 
 
 using namespace std;
+// min non-zero pixel value of image
+float image_minnonzero(const FloatImage &im)
+{
+	//return std::numeric_limits<float>::min(); // change this
+	return 1.17549e-37;
+}
 
+// image --> log10FloatImage
+FloatImage log10FloatImage(const FloatImage &im)
+{
+	// Taking a linear image im, transform to log10 scale.
+	// To avoid infinity issues, make any 0-valued pixel be equal the the minimum
+	// non-zero value. See image_minnonzero(im).
+	FloatImage out=im;
+	for(int i=0;i<im.size();i++){
+		if(im(i)==0.f){
+			out(i)=image_minnonzero(im);
+		}else{
+			out(i)=log10(im(i));
+		}
+
+		
+	}
+	return out; // change this
+}
+
+// FloatImage --> 10^FloatImage
+FloatImage exp10FloatImage(const FloatImage &im)
+{
+	// take an image in log10 domain and transform it back to linear domain.
+	// see pow(a, b)
+	FloatImage out=im;
+	for(int i=0;i<im.size();i++){
+		out(i)=pow(10,im(i));
+
+	}
+
+	return out; // change this
+}
 // test the smart accessor function
 void testSmartAccessor()
 {
@@ -248,10 +286,14 @@ segsAfter.push_back(Segment(289, 264, 290, 275));
 //poisson blending
 void testBlend(){
 
-	//load images
-	FloatImage sourceImage(DATA_DIR "/input/a6/source.jpg");
-	FloatImage targetImage(DATA_DIR "/input/a6/target.jpg");
-	FloatImage maskImage(DATA_DIR "/input/a6/mask.jpg");
+	//load images	
+	FloatImage sourceImage(DATA_DIR "/input/a6/source_p.png");
+	FloatImage targetImage(DATA_DIR "/input/a6/target_p.png");
+	FloatImage maskImage(DATA_DIR "/input/a6/mask_p.png");
+	FloatImage targetImage_copy=targetImage;
+	sourceImage=log10FloatImage(sourceImage);
+	targetImage=log10FloatImage(targetImage);
+	
 
 
 	//check if three images have the same dimension
@@ -265,7 +307,7 @@ void testBlend(){
 		for(int x=0;x<maskImage.width();x++){
 			for(int y=0;y<maskImage.height();y++){
 				//white part of the mask
-				if(maskImage(x,y,0)>0.99f){
+				if(maskImage(x,y,0)>0.9f){
 					varMap[y*maskImage.width()+x]=number;
 					number++;
 				}
@@ -273,36 +315,37 @@ void testBlend(){
 		}
 	}
 
+
 	//construct sparse matrix M in Mx = b
 	vector<Triplet> mt;
-	{	
-		
+	{			
 		int i=0;		
+
 		for(int x=0;x<maskImage.width();x++){
 			for(int y=0;y<maskImage.height();y++){
-
-				int j=y*maskImage.width()+x;
-
-				if(maskImage(x,y,0)>0.99f){
+				
+				if(maskImage(x,y,0)>0.9f){
+					int j=y*maskImage.width()+x;
 					mt.push_back(Triplet(i,varMap[j],4));
 				
-					if(maskImage(x+1,y,0)>0.99f){
+					if(maskImage(x+1,y,0)>0.9f){
 						mt.push_back(Triplet(i,varMap[j+1],-1));
 					}
-					if(maskImage(x-1,y,0)>0.99f){
+					if(maskImage(x-1,y,0)>0.9f){
 						mt.push_back(Triplet(i,varMap[j-1],-1));
 					}
-					if(maskImage(x,y+1,0)>0.99f){
+					if(maskImage(x,y+1,0)>0.9f){
 						mt.push_back(Triplet(i,varMap[j+maskImage.width()],-1));
 					}
-					if(maskImage(x,y-1,0)>0.99f){
+					if(maskImage(x,y-1,0)>0.9f){
 						mt.push_back(Triplet(i,varMap[j-maskImage.width()],-1));
 					}
 					i++;
 				}
 
 			}
-		}				
+		}	
+
 	}
 	
 	
@@ -322,10 +365,11 @@ void testBlend(){
 	VectorD sol[3];
 	for(int ic=0;ic<3;ic++){		
 		int i=0;
-
 		for(int x=0;x<maskImage.width();x++){
 			for(int y=0;y<maskImage.height();y++){
-				if(maskImage(x,y,ic)>0.99f){
+
+
+				if(maskImage(x,y,ic)>0.9f){
 					//graident from source image
 					float pixel=4*sourceImage(x,y,ic)-sourceImage(x-1,y,ic)-sourceImage(x+1,y,ic)
 								-sourceImage(x,y-1,ic)-sourceImage(x,y+1,ic);
@@ -346,33 +390,39 @@ void testBlend(){
 					b[i]=pixel;
 					i++;
 				}
+
+
 			}
-		}
-	
+		}	
 		//solve x and save each channel in sol
 		sol[ic]=solver.solve(b);
 	}
-	//cout<<sol[0]<<endl;
+
 
 	//write image to output
 	FloatImage output(maskImage.width(),maskImage.height(),3);
+	
 	for (int ic = 0; ic < 3; ic++){
 		for (int x = 0; x < maskImage.width(); x++){
 			for (int y = 0; y < maskImage.height(); y++){
 				if(maskImage(x,y,0)<0.1f){
-					output(x,y,ic)=targetImage(x,y,ic);
+					output(x,y,ic)=targetImage_copy(x,y,ic);
 				}else{
 					int j=y*maskImage.width()+x;
-					auto value=sol[ic][varMap[j]];
-					output(x,y,ic)=clamp(value,0.,1.);
+					float value=(float)pow(10,sol[ic][varMap[j]]);
+					//float value=(float)sol[ic][varMap[j]];
+					//output(x,y,ic)=clamp(value,0.f,1.f);
+					output(x,y,ic)=value;
 					//output(x,y,ic)=sourceImage(x,y,ic);
 				}				
 			}			
 		}		
 	}
-	output.write(DATA_DIR "/output/gdcp_1.png");
-
+	
+	output.write(DATA_DIR "/output/gradient_copy_p.png");
 }
+
+
 
 // This is a way for you to test your functions.
 // We will not grade the contents of the main function
