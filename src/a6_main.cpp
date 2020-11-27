@@ -1,7 +1,7 @@
 #include "morphing.h"
 #include "a6.h"
 #include <map>
-#include <utils.h>
+#include "utils.h"
 #include "Eigen/Sparse"
 typedef Eigen::SparseMatrix<double> SpMatrix;
 typedef Eigen::Triplet<double> Triplet;

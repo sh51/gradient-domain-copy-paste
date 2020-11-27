@@ -131,17 +131,17 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named a4
+# Target rules for targets named a6
 
 # Build rule for target.
-a4: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 a4
-.PHONY : a4
+a6: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 a6
+.PHONY : a6
 
 # fast build rule for target.
-a4/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/a4.dir/build.make CMakeFiles/a4.dir/build
-.PHONY : a4/fast
+a6/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/a6.dir/build.make CMakeFiles/a6.dir/build
+.PHONY : a6/fast
 
 #=============================================================================
 # Target rules for targets named common_lib
@@ -162,7 +162,7 @@ src/a2.o: src/a2.cpp.o
 
 # target to build an object file
 src/a2.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/a4.dir/build.make CMakeFiles/a4.dir/src/a2.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/a6.dir/build.make CMakeFiles/a6.dir/src/a2.cpp.o
 .PHONY : src/a2.cpp.o
 
 src/a2.i: src/a2.cpp.i
@@ -171,7 +171,7 @@ src/a2.i: src/a2.cpp.i
 
 # target to preprocess a source file
 src/a2.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/a4.dir/build.make CMakeFiles/a4.dir/src/a2.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/a6.dir/build.make CMakeFiles/a6.dir/src/a2.cpp.i
 .PHONY : src/a2.cpp.i
 
 src/a2.s: src/a2.cpp.s
@@ -180,35 +180,62 @@ src/a2.s: src/a2.cpp.s
 
 # target to generate assembly for a file
 src/a2.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/a4.dir/build.make CMakeFiles/a4.dir/src/a2.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/a6.dir/build.make CMakeFiles/a6.dir/src/a2.cpp.s
 .PHONY : src/a2.cpp.s
 
-src/a4_main.o: src/a4_main.cpp.o
+src/a6.o: src/a6.cpp.o
 
-.PHONY : src/a4_main.o
+.PHONY : src/a6.o
 
 # target to build an object file
-src/a4_main.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/a4.dir/build.make CMakeFiles/a4.dir/src/a4_main.cpp.o
-.PHONY : src/a4_main.cpp.o
+src/a6.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/a6.dir/build.make CMakeFiles/a6.dir/src/a6.cpp.o
+.PHONY : src/a6.cpp.o
 
-src/a4_main.i: src/a4_main.cpp.i
+src/a6.i: src/a6.cpp.i
 
-.PHONY : src/a4_main.i
+.PHONY : src/a6.i
 
 # target to preprocess a source file
-src/a4_main.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/a4.dir/build.make CMakeFiles/a4.dir/src/a4_main.cpp.i
-.PHONY : src/a4_main.cpp.i
+src/a6.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/a6.dir/build.make CMakeFiles/a6.dir/src/a6.cpp.i
+.PHONY : src/a6.cpp.i
 
-src/a4_main.s: src/a4_main.cpp.s
+src/a6.s: src/a6.cpp.s
 
-.PHONY : src/a4_main.s
+.PHONY : src/a6.s
 
 # target to generate assembly for a file
-src/a4_main.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/a4.dir/build.make CMakeFiles/a4.dir/src/a4_main.cpp.s
-.PHONY : src/a4_main.cpp.s
+src/a6.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/a6.dir/build.make CMakeFiles/a6.dir/src/a6.cpp.s
+.PHONY : src/a6.cpp.s
+
+src/a6_main.o: src/a6_main.cpp.o
+
+.PHONY : src/a6_main.o
+
+# target to build an object file
+src/a6_main.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/a6.dir/build.make CMakeFiles/a6.dir/src/a6_main.cpp.o
+.PHONY : src/a6_main.cpp.o
+
+src/a6_main.i: src/a6_main.cpp.i
+
+.PHONY : src/a6_main.i
+
+# target to preprocess a source file
+src/a6_main.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/a6.dir/build.make CMakeFiles/a6.dir/src/a6_main.cpp.i
+.PHONY : src/a6_main.cpp.i
+
+src/a6_main.s: src/a6_main.cpp.s
+
+.PHONY : src/a6_main.s
+
+# target to generate assembly for a file
+src/a6_main.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/a6.dir/build.make CMakeFiles/a6.dir/src/a6_main.cpp.s
+.PHONY : src/a6_main.cpp.s
 
 src/filtering.o: src/filtering.cpp.o
 
@@ -216,7 +243,7 @@ src/filtering.o: src/filtering.cpp.o
 
 # target to build an object file
 src/filtering.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/a4.dir/build.make CMakeFiles/a4.dir/src/filtering.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/a6.dir/build.make CMakeFiles/a6.dir/src/filtering.cpp.o
 .PHONY : src/filtering.cpp.o
 
 src/filtering.i: src/filtering.cpp.i
@@ -225,7 +252,7 @@ src/filtering.i: src/filtering.cpp.i
 
 # target to preprocess a source file
 src/filtering.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/a4.dir/build.make CMakeFiles/a4.dir/src/filtering.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/a6.dir/build.make CMakeFiles/a6.dir/src/filtering.cpp.i
 .PHONY : src/filtering.cpp.i
 
 src/filtering.s: src/filtering.cpp.s
@@ -234,7 +261,7 @@ src/filtering.s: src/filtering.cpp.s
 
 # target to generate assembly for a file
 src/filtering.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/a4.dir/build.make CMakeFiles/a4.dir/src/filtering.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/a6.dir/build.make CMakeFiles/a6.dir/src/filtering.cpp.s
 .PHONY : src/filtering.cpp.s
 
 src/floatimage.o: src/floatimage.cpp.o
@@ -264,6 +291,33 @@ src/floatimage.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/common_lib.dir/build.make CMakeFiles/common_lib.dir/src/floatimage.cpp.s
 .PHONY : src/floatimage.cpp.s
 
+src/morphing.o: src/morphing.cpp.o
+
+.PHONY : src/morphing.o
+
+# target to build an object file
+src/morphing.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/a6.dir/build.make CMakeFiles/a6.dir/src/morphing.cpp.o
+.PHONY : src/morphing.cpp.o
+
+src/morphing.i: src/morphing.cpp.i
+
+.PHONY : src/morphing.i
+
+# target to preprocess a source file
+src/morphing.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/a6.dir/build.make CMakeFiles/a6.dir/src/morphing.cpp.i
+.PHONY : src/morphing.cpp.i
+
+src/morphing.s: src/morphing.cpp.s
+
+.PHONY : src/morphing.s
+
+# target to generate assembly for a file
+src/morphing.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/a6.dir/build.make CMakeFiles/a6.dir/src/morphing.cpp.s
+.PHONY : src/morphing.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -272,20 +326,26 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
-	@echo "... a4"
+	@echo "... a6"
 	@echo "... common_lib"
 	@echo "... src/a2.o"
 	@echo "... src/a2.i"
 	@echo "... src/a2.s"
-	@echo "... src/a4_main.o"
-	@echo "... src/a4_main.i"
-	@echo "... src/a4_main.s"
+	@echo "... src/a6.o"
+	@echo "... src/a6.i"
+	@echo "... src/a6.s"
+	@echo "... src/a6_main.o"
+	@echo "... src/a6_main.i"
+	@echo "... src/a6_main.s"
 	@echo "... src/filtering.o"
 	@echo "... src/filtering.i"
 	@echo "... src/filtering.s"
 	@echo "... src/floatimage.o"
 	@echo "... src/floatimage.i"
 	@echo "... src/floatimage.s"
+	@echo "... src/morphing.o"
+	@echo "... src/morphing.i"
+	@echo "... src/morphing.s"
 .PHONY : help
 
 

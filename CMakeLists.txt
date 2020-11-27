@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.1)
-project(a4)
+# project(a4)
+project(a6)
 
 add_subdirectory(src/ext)
 
@@ -31,11 +32,18 @@ add_library(common_lib STATIC
 )
 SOURCE_GROUP("src\\ext\\stb" FILES ${ext_stb_srcs})
 
-set(a4_srcs   src/a4_main.cpp src/filtering.cpp src/a2.cpp)                 # a4
-add_executable(a4 ${a4_srcs})                                               # a4
-target_link_libraries(a4 common_lib)                                        # a4
-SOURCE_GROUP("src" FILES ${a4_srcs})                                        # a4
-                                                                            # a4
+# set(a4_srcs   src/a4_main.cpp src/filtering.cpp src/a2.cpp)                 # a4
+# add_executable(a4 ${a4_srcs})                                               # a4
+# target_link_libraries(a4 common_lib)                                        # a4
+# SOURCE_GROUP("src" FILES ${a4_srcs})                                        # a4
+#                                                                             # a4
+set(a6_srcs   src/a6_main.cpp src/filtering.cpp src/a2.cpp src/morphing.cpp src/a6.cpp)                 # a6
+add_executable(a6 ${a6_srcs})                                               # a6
+target_link_libraries(a6 common_lib)                                        # a6
+SOURCE_GROUP("src" FILES ${a6_srcs})                                        # a6
+                                                                            # a6
 
+# # Create the output data directory
+# add_custom_command(TARGET a4 POST_BUILD COMMAND ${CMAKE_COMMAND} -E make_directory "${PROJECT_SOURCE_DIR}/data/output") # a4
 # Create the output data directory
-add_custom_command(TARGET a4 POST_BUILD COMMAND ${CMAKE_COMMAND} -E make_directory "${PROJECT_SOURCE_DIR}/data/output") # a4
+add_custom_command(TARGET a6 POST_BUILD COMMAND ${CMAKE_COMMAND} -E make_directory "${PROJECT_SOURCE_DIR}/data/output") # a6

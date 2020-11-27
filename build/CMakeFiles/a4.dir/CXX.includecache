@@ -6,22 +6,6 @@
 
 #IncludeRegexTransform: 
 
-/Users/huang/Downloads/CS73-gdcp/src/a2.cpp
-a2.h
-/Users/huang/Downloads/CS73-gdcp/src/a2.h
-math.h
--
-utils.h
-/Users/huang/Downloads/CS73-gdcp/src/utils.h
-assert.h
--
-iostream
--
-
-/Users/huang/Downloads/CS73-gdcp/src/a2.h
-floatimage.h
-/Users/huang/Downloads/CS73-gdcp/src/floatimage.h
-
 /Users/huang/Downloads/CS73-gdcp/src/a4_main.cpp
 filtering.h
 /Users/huang/Downloads/CS73-gdcp/src/filtering.h
@@ -38,14 +22,6 @@ exceptions.h
 stdexcept
 -
 stdio.h
--
-
-/Users/huang/Downloads/CS73-gdcp/src/filtering.cpp
-filtering.h
-/Users/huang/Downloads/CS73-gdcp/src/filtering.h
-a2.h
-/Users/huang/Downloads/CS73-gdcp/src/a2.h
-math.h
 -
 
 /Users/huang/Downloads/CS73-gdcp/src/filtering.h

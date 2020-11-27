@@ -20,6 +20,7 @@ public:
     
     // function to convolve your filter with an image
     FloatImage Convolve(const FloatImage &im, bool clamp=true) const;
+    FloatImage LConv_1D(const FloatImage &im, bool clamp=true) const;
     
     // Accessors of the filter values
     const float & operator()(int x, int y) const;

@@ -1,18 +1,28 @@
 [
 {
   "directory": "/Users/huang/Downloads/CS73-gdcp/build",
-  "command": "/usr/bin/clang++  -DDATA_DIR=\"R\\\"(/Users/huang/Downloads/CS73-gdcp/data)\\\"\" -I/Users/huang/Downloads/CS73-gdcp/src -I/Users/huang/Downloads/CS73-gdcp/src/ext -I/Users/huang/Downloads/CS73-gdcp/src/ext/stb   -Wall -Wextra -Wno-unused-parameter -Wno-ignored-attributes -Wno-gnu-anonymous-struct -Wno-c99-extensions -Wno-nested-anon-types -Wno-deprecated-register -g -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX11.0.sdk   -std=c++11 -o CMakeFiles/a4.dir/src/a4_main.cpp.o -c /Users/huang/Downloads/CS73-gdcp/src/a4_main.cpp",
-  "file": "/Users/huang/Downloads/CS73-gdcp/src/a4_main.cpp"
+  "command": "/usr/bin/clang++  -DDATA_DIR=\"R\\\"(/Users/huang/Downloads/CS73-gdcp/data)\\\"\" -I/Users/huang/Downloads/CS73-gdcp/src -I/Users/huang/Downloads/CS73-gdcp/src/ext -I/Users/huang/Downloads/CS73-gdcp/src/ext/stb   -Wall -Wextra -Wno-unused-parameter -Wno-ignored-attributes -Wno-gnu-anonymous-struct -Wno-c99-extensions -Wno-nested-anon-types -Wno-deprecated-register -g -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX11.0.sdk   -std=c++11 -o CMakeFiles/a6.dir/src/a6_main.cpp.o -c /Users/huang/Downloads/CS73-gdcp/src/a6_main.cpp",
+  "file": "/Users/huang/Downloads/CS73-gdcp/src/a6_main.cpp"
 },
 {
   "directory": "/Users/huang/Downloads/CS73-gdcp/build",
-  "command": "/usr/bin/clang++  -DDATA_DIR=\"R\\\"(/Users/huang/Downloads/CS73-gdcp/data)\\\"\" -I/Users/huang/Downloads/CS73-gdcp/src -I/Users/huang/Downloads/CS73-gdcp/src/ext -I/Users/huang/Downloads/CS73-gdcp/src/ext/stb   -Wall -Wextra -Wno-unused-parameter -Wno-ignored-attributes -Wno-gnu-anonymous-struct -Wno-c99-extensions -Wno-nested-anon-types -Wno-deprecated-register -g -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX11.0.sdk   -std=c++11 -o CMakeFiles/a4.dir/src/filtering.cpp.o -c /Users/huang/Downloads/CS73-gdcp/src/filtering.cpp",
+  "command": "/usr/bin/clang++  -DDATA_DIR=\"R\\\"(/Users/huang/Downloads/CS73-gdcp/data)\\\"\" -I/Users/huang/Downloads/CS73-gdcp/src -I/Users/huang/Downloads/CS73-gdcp/src/ext -I/Users/huang/Downloads/CS73-gdcp/src/ext/stb   -Wall -Wextra -Wno-unused-parameter -Wno-ignored-attributes -Wno-gnu-anonymous-struct -Wno-c99-extensions -Wno-nested-anon-types -Wno-deprecated-register -g -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX11.0.sdk   -std=c++11 -o CMakeFiles/a6.dir/src/filtering.cpp.o -c /Users/huang/Downloads/CS73-gdcp/src/filtering.cpp",
   "file": "/Users/huang/Downloads/CS73-gdcp/src/filtering.cpp"
 },
 {
   "directory": "/Users/huang/Downloads/CS73-gdcp/build",
-  "command": "/usr/bin/clang++  -DDATA_DIR=\"R\\\"(/Users/huang/Downloads/CS73-gdcp/data)\\\"\" -I/Users/huang/Downloads/CS73-gdcp/src -I/Users/huang/Downloads/CS73-gdcp/src/ext -I/Users/huang/Downloads/CS73-gdcp/src/ext/stb   -Wall -Wextra -Wno-unused-parameter -Wno-ignored-attributes -Wno-gnu-anonymous-struct -Wno-c99-extensions -Wno-nested-anon-types -Wno-deprecated-register -g -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX11.0.sdk   -std=c++11 -o CMakeFiles/a4.dir/src/a2.cpp.o -c /Users/huang/Downloads/CS73-gdcp/src/a2.cpp",
+  "command": "/usr/bin/clang++  -DDATA_DIR=\"R\\\"(/Users/huang/Downloads/CS73-gdcp/data)\\\"\" -I/Users/huang/Downloads/CS73-gdcp/src -I/Users/huang/Downloads/CS73-gdcp/src/ext -I/Users/huang/Downloads/CS73-gdcp/src/ext/stb   -Wall -Wextra -Wno-unused-parameter -Wno-ignored-attributes -Wno-gnu-anonymous-struct -Wno-c99-extensions -Wno-nested-anon-types -Wno-deprecated-register -g -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX11.0.sdk   -std=c++11 -o CMakeFiles/a6.dir/src/a2.cpp.o -c /Users/huang/Downloads/CS73-gdcp/src/a2.cpp",
   "file": "/Users/huang/Downloads/CS73-gdcp/src/a2.cpp"
+},
+{
+  "directory": "/Users/huang/Downloads/CS73-gdcp/build",
+  "command": "/usr/bin/clang++  -DDATA_DIR=\"R\\\"(/Users/huang/Downloads/CS73-gdcp/data)\\\"\" -I/Users/huang/Downloads/CS73-gdcp/src -I/Users/huang/Downloads/CS73-gdcp/src/ext -I/Users/huang/Downloads/CS73-gdcp/src/ext/stb   -Wall -Wextra -Wno-unused-parameter -Wno-ignored-attributes -Wno-gnu-anonymous-struct -Wno-c99-extensions -Wno-nested-anon-types -Wno-deprecated-register -g -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX11.0.sdk   -std=c++11 -o CMakeFiles/a6.dir/src/morphing.cpp.o -c /Users/huang/Downloads/CS73-gdcp/src/morphing.cpp",
+  "file": "/Users/huang/Downloads/CS73-gdcp/src/morphing.cpp"
+},
+{
+  "directory": "/Users/huang/Downloads/CS73-gdcp/build",
+  "command": "/usr/bin/clang++  -DDATA_DIR=\"R\\\"(/Users/huang/Downloads/CS73-gdcp/data)\\\"\" -I/Users/huang/Downloads/CS73-gdcp/src -I/Users/huang/Downloads/CS73-gdcp/src/ext -I/Users/huang/Downloads/CS73-gdcp/src/ext/stb   -Wall -Wextra -Wno-unused-parameter -Wno-ignored-attributes -Wno-gnu-anonymous-struct -Wno-c99-extensions -Wno-nested-anon-types -Wno-deprecated-register -g -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX11.0.sdk   -std=c++11 -o CMakeFiles/a6.dir/src/a6.cpp.o -c /Users/huang/Downloads/CS73-gdcp/src/a6.cpp",
+  "file": "/Users/huang/Downloads/CS73-gdcp/src/a6.cpp"
 },
 {
   "directory": "/Users/huang/Downloads/CS73-gdcp/build",

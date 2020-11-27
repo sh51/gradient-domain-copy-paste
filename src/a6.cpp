@@ -7,86 +7,117 @@ using namespace std;
 // create a new image that is k times bigger than the input by using nearest neighbor interpolation
 FloatImage scaleNN(const FloatImage &im, float factor)
 {
-	// create new FloatImage that is factor times larger than input image
-	FloatImage output(floor(im.sizeX()*factor),floor(im.sizeY()*factor),im.depth());
 
-	// loop over new FloatImage pixels and set appropriate values (smartAccessor is probably overkill here)
-	for(int i=0;i<output.sizeX();i++){
-		for(int j=0;j<output.sizeY();j++){
-			for(int k=0;k<im.depth();k++){	
-				output(i,j,k)=im(round(i/factor),round(j/factor),k);
+	int ys, xs;
+
+	// get new FloatImage
+	int nWidth = floor(factor * im.width());
+	int nHeight = floor(factor * im.height());
+	FloatImage im2(nWidth, nHeight, im.channels());
+
+	// get appropriate values (smartAccessor is probably overkill here)
+	for (int x = 0; x < nWidth; x++)
+		for (int y = 0; y < nHeight; y++)
+			for (int z = 0; z < im.channels(); z++)
+			{
+				ys = round(1 / factor * y);
+				xs = round(1 / factor * x);
+				im2(x, y, z) = im.smartAccessor(xs, ys, z, true);
 			}
-		}
-	}
 
 	// return new image
-	return output; // CHANGE ME
+	return im2;
+
 }
 
 // using bilinear interpolation to assign the value of a location from its neighboring pixel values
 float interpolateLin(const FloatImage &im, float x, float y, int z, bool clamp)
 {
-	// Hint: use smartAccessor() to handle coordinates outside the image
-	//return final float value
-	float f_x, f_y, row_1, row_2;
-	f_x=x-floor(x);//dist to top
-	f_y=y-floor(y);//dist to left
-	//first row
-	row_1=(1.f-f_y)*im.smartAccessor(floor(x),floor(y),z,clamp)+f_y*im.smartAccessor(floor(x),floor(y)+1,z,clamp);
-	//second row
-	row_2=(1.f-f_y)*im.smartAccessor(floor(x)+1,floor(y),z,clamp)+f_y*im.smartAccessor(floor(x)+1,floor(y)+1,z,clamp);
-	//colume lerp
-    return (1.f-f_x)*row_1+f_x*row_2; 
+
+	// get the extreme points
+	int xf = floor(x);
+	int yf = floor(y);
+	int xc = xf + 1;
+	int yc = yf + 1;
+
+	// compute the distances of the point to the floor-extreme point
+	float yalpha = y - yf;
+	float xalpha = x - xf;
+
+	// obtain the values at those points
+	float tl = im.smartAccessor(xf, yf, z, clamp);
+	float tr = im.smartAccessor(xc, yf, z, clamp);
+	float bl = im.smartAccessor(xf, yc, z, clamp);
+	float br = im.smartAccessor(xc, yc, z, clamp);
+
+	// compute the interpolations on the top and bottom
+	float topL = tr * xalpha + tl * (1.0 - xalpha);
+	float botL = br * xalpha + bl * (1.0 - xalpha);
+
+	// compute the overall interpolation
+	float retv = botL * yalpha + topL * (1.0 - yalpha);
+
+	// return final floar value
+	return retv;
+
 }
 
 // create a new image that is k times bigger than the input by using bilinear interpolation
 FloatImage scaleLin(const FloatImage &im, float factor)
 {
 
-	FloatImage output(floor(im.sizeX()*factor),floor(im.sizeY()*factor),im.depth());
+	float ys, xs;
 
-    // loop over new FloatImage pixels and set appropriate values (use interpolateLin())
-	for(int i=0;i<output.sizeX();i++){
-		for(int j=0;j<output.sizeY();j++){
-			for(int k=0;k<im.depth();k++){			
-				output(i,j,k)=interpolateLin(im,i/factor,j/factor,k);
+	// get new FloatImage
+	int nWidth = floor(factor * im.width());
+	int nHeight = floor(factor * im.height());
+	FloatImage im2(nWidth, nHeight, im.channels());
 
+	// get appropriate values
+	for (int x = 0; x < nWidth; x++)
+		for (int y = 0; y < nHeight; y++)
+			for (int z = 0; z < im.channels(); z++)
+			{
+
+				ys = 1 / factor * y;
+				xs = 1 / factor * x;
+
+				im2(x, y, z) = interpolateLin(im, xs, ys, z);
 			}
-			
-		}
-	}
 
 	// return new image
-    return output; // CHANGE ME
+	return im2;
+
 }
 
 // rotate an image around its center by theta
 FloatImage rotate(const FloatImage &im, float theta)
 {
-	FloatImage out(im.width(),im.height(),im.sizeZ());
-	float x;
-	float y;
-	float x_c,y_c;
-	
-	//rotate im around its center by theta
-	for(int i=0;i< out.sizeX();i++){
-		for(int j=0;j<out.sizeY();j++){
-			for(int k=0;k<im.depth();k++){
-				//translate the rotation:x y-c
-				x_c=i-im.width()/2;
-				y_c=j-im.height()/2;
-				//apply rotation
-				x=x_c*cos(theta)-y_c*sin(theta);
-				y=x_c*sin(theta)+y_c*cos(theta);
-				//translate back: xy +c
-				x_c=x+im.width()/2;
-				y_c=y+im.height()/2;
-				//transfomed position, bilinear
-				out(i,j,k)= interpolateLin(im,x_c,y_c,k,false);
-			}
-		}
-	}
 
-	// return rotated image
-    return out; 
+	// create rotation matrix
+	float yR, xR;
+
+	// center around which to rotate
+	float centerX = (im.width() - 1.0) / 2.0;
+	float centerY = (im.height() - 1.0) / 2.0;
+
+	// get new image
+	FloatImage imR(im.width(), im.height(), im.channels());
+
+	// get appropriate values
+	for (int x = 0; x < im.width(); x++)
+		for (int y = 0; y < im.height(); y++)
+			for (int z = 0; z < im.channels(); z++)
+			{
+				// compute the x and y values from the original image
+				xR = ((float) x - centerX) * cos(theta) + (centerY - (float) y) * sin(theta) + centerX;
+				yR = centerY - (-((float) x - centerX) * sin(theta) + (centerY - (float) y) * cos(theta));
+
+				// interpolate the point
+				imR(x, y, z) = interpolateLin(im, xR, yR, z);
+			}
+
+	// return new image
+	return imR;
+
 }

@@ -176,14 +176,14 @@ void testBilaterial()
 
 // This is a way for you to test your functions.
 // We will not grade the contents of the main function
-int main()
-{
-    // uncomment these test functions as you complete the assignment
-    //try {testSmartAccessor();}      catch(...) { cout << "EXCEPTION: Smart Accessor failed" << endl; }
-    //try {testBoxBlur(); }           catch(...) { cout << "EXCEPTION: Box Blur failed" << endl; }
-    //try {testShiftedImpulse();}     catch(...) { cout << "EXCEPTION: Box Blur failed" << endl; }
-    //try {testGradient();}           catch(...) { cout << "EXCEPTION: Box Blur failed" << endl; }
-    //try {testGaussianFilters();}    catch(...) { cout << "EXCEPTION: Box Blur failed" << endl; }
-    //try {testSharpen();}            catch(...) { cout << "EXCEPTION: Box Blur failed" << endl; }
-    //try {testBilaterial();}         catch(...) { cout << "EXCEPTION: Box Blur failed" << endl; }
-}
+// int main()
+// {
+//     // uncomment these test functions as you complete the assignment
+//     //try {testSmartAccessor();}      catch(...) { cout << "EXCEPTION: Smart Accessor failed" << endl; }
+//     //try {testBoxBlur(); }           catch(...) { cout << "EXCEPTION: Box Blur failed" << endl; }
+//     //try {testShiftedImpulse();}     catch(...) { cout << "EXCEPTION: Box Blur failed" << endl; }
+//     //try {testGradient();}           catch(...) { cout << "EXCEPTION: Box Blur failed" << endl; }
+//     //try {testGaussianFilters();}    catch(...) { cout << "EXCEPTION: Box Blur failed" << endl; }
+//     //try {testSharpen();}            catch(...) { cout << "EXCEPTION: Box Blur failed" << endl; }
+//     //try {testBilaterial();}         catch(...) { cout << "EXCEPTION: Box Blur failed" << endl; }
+// }
