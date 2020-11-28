@@ -284,17 +284,20 @@ segsAfter.push_back(Segment(289, 264, 290, 275));
 }
 
 //poisson blending
-void testBlend(){
+FloatImage testBlend(FloatImage src,FloatImage tar, FloatImage msk){
 
 	//load images	
-	FloatImage sourceImage(DATA_DIR "/input/a6/source_p.png");
-	FloatImage targetImage(DATA_DIR "/input/a6/target_p.png");
-	FloatImage maskImage(DATA_DIR "/input/a6/mask_p.png");
+	// FloatImage sourceImage(DATA_DIR "/input/a6/source_p.png");
+	// FloatImage targetImage(DATA_DIR "/input/a6/target_p.png");
+	// FloatImage maskImage(DATA_DIR "/input/a6/mask_p.png");
+	FloatImage sourceImage(src);
+	FloatImage targetImage(tar);
+	FloatImage maskImage(msk);
 	FloatImage targetImage_copy=targetImage;
-	sourceImage=log10FloatImage(sourceImage);
-	targetImage=log10FloatImage(targetImage);
+	// sourceImage=log10FloatImage(sourceImage);
+	// targetImage=log10FloatImage(targetImage);
 	
-
+	cout<< "clear"<< endl;
 
 	//check if three images have the same dimension
 
@@ -315,6 +318,7 @@ void testBlend(){
 		}
 	}
 
+	cout<< "clear>"<< endl;
 
 	//construct sparse matrix M in Mx = b
 	vector<Triplet> mt;
@@ -323,7 +327,6 @@ void testBlend(){
 
 		for(int x=0;x<maskImage.width();x++){
 			for(int y=0;y<maskImage.height();y++){
-				
 				if(maskImage(x,y,0)>0.9f){
 					int j=y*maskImage.width()+x;
 					mt.push_back(Triplet(i,varMap[j],4));
@@ -334,10 +337,10 @@ void testBlend(){
 					if(maskImage(x-1,y,0)>0.9f){
 						mt.push_back(Triplet(i,varMap[j-1],-1));
 					}
-					if(maskImage(x,y+1,0)>0.9f){
+					if(y+1 < maskImage.sizeY() && (x,y+1,0)>0.9f){
 						mt.push_back(Triplet(i,varMap[j+maskImage.width()],-1));
 					}
-					if(maskImage(x,y-1,0)>0.9f){
+					if(y-1 >= 0 && maskImage(x,y-1,0)>0.9f){
 						mt.push_back(Triplet(i,varMap[j-maskImage.width()],-1));
 					}
 					i++;
@@ -348,7 +351,7 @@ void testBlend(){
 
 	}
 	
-	
+	cout<< "clear<!"<< endl;
 
 	Eigen::SimplicialCholesky<SpMatrix> solver;
 	{
@@ -357,13 +360,11 @@ void testBlend(){
 		//cout<<mat<<endl;
 		solver.compute(mat);		
 	}
-	
-
 
 	//construct b
 	VectorD b(varMap.size());
 	VectorD sol[3];
-	for(int ic=0;ic<3;ic++){		
+	for(int ic=0;ic<maskImage.sizeZ();ic++){		
 		int i=0;
 		for(int x=0;x<maskImage.width();x++){
 			for(int y=0;y<maskImage.height();y++){
@@ -371,8 +372,10 @@ void testBlend(){
 
 				if(maskImage(x,y,ic)>0.9f){
 					//graident from source image
-					float pixel=4*sourceImage(x,y,ic)-sourceImage(x-1,y,ic)-sourceImage(x+1,y,ic)
-								-sourceImage(x,y-1,ic)-sourceImage(x,y+1,ic);
+					// float pixel=4*sourceImage(x,y,ic)-sourceImage(x-1,y,ic)-sourceImage(x+1,y,ic)
+					// 			-sourceImage(x,y-1,ic)-sourceImage(x,y+1,ic);
+					// 1D case
+					float pixel=2*sourceImage(x,y,ic)-sourceImage(x-1,y,ic)-sourceImage(x+1,y,ic);
 
 					//add boundary from target image
 					if(maskImage(x+1,y,ic)<0.1f){
@@ -381,10 +384,10 @@ void testBlend(){
 					if(maskImage(x-1,y,ic)<0.1f){
 						pixel+=targetImage(x-1,y,ic);
 					}
-					if(maskImage(x,y+1,ic)<0.1f){
+					if(y+1 < maskImage.sizeY() && maskImage(x,y+1,ic)<0.1f){
 						pixel+=targetImage(x,y+1,ic);
 					}
-					if(maskImage(x,y-1,ic)<0.1f){
+					if(y-1 >= 0 && maskImage(x,y-1,ic)<0.1f){
 						pixel+=targetImage(x,y-1,ic);
 					}
 					b[i]=pixel;
@@ -398,20 +401,23 @@ void testBlend(){
 		sol[ic]=solver.solve(b);
 	}
 
+	cout<< "clear"<< endl;
 
 	//write image to output
-	FloatImage output(maskImage.width(),maskImage.height(),3);
+	FloatImage output(maskImage.width(),maskImage.height(), maskImage.sizeZ());
 	
-	for (int ic = 0; ic < 3; ic++){
+	for (int ic = 0; ic < maskImage.sizeZ(); ic++){
 		for (int x = 0; x < maskImage.width(); x++){
 			for (int y = 0; y < maskImage.height(); y++){
 				if(maskImage(x,y,0)<0.1f){
 					output(x,y,ic)=targetImage_copy(x,y,ic);
 				}else{
 					int j=y*maskImage.width()+x;
-					float value=(float)pow(10,sol[ic][varMap[j]]);
-					//float value=(float)sol[ic][varMap[j]];
-					//output(x,y,ic)=clamp(value,0.f,1.f);
+
+					// float value=(float)pow(10,sol[ic][varMap[j]]);
+					float value=(float)sol[ic][varMap[j]];
+
+					// output(x,y,ic)=clamp(value,0.f,1.f);
 					output(x,y,ic)=value;
 					//output(x,y,ic)=sourceImage(x,y,ic);
 				}				
@@ -420,6 +426,8 @@ void testBlend(){
 	}
 	
 	output.write(DATA_DIR "/output/gradient_copy_p.png");
+
+	return output;
 }
 
 
@@ -429,6 +437,36 @@ void testBlend(){
 int main()
 {
 	// uncomment these test functions as you complete the assignment to test your code
+	FloatImage im(8, 1, 1), tim(8, 1, 1), msk(8, 1, 1);
+	im(0) = 10;
+	im(1) = 5;
+	im(2) = 3;
+	im(3) = 6;
+	im(4) = 3;
+	im(5) = 4;
+	im(6) = 1;
+	im(7) = 8;
+
+	tim(0) = 1;
+	tim(1) = 3;
+	tim(2) = 3;
+	tim(3) = 8;
+	tim(4) = 9;
+	tim(5) = 4;
+	tim(6) = 7;
+	tim(7) = 2;
+
+	msk(0) = 0;
+	msk(1) = 0;
+	msk(2) = 1;
+	msk(3) = 2;
+	msk(4) = 3;
+	msk(5) = 4;
+	msk(6) = 0;
+	msk(7) = 0;
+
+	FloatImage output(8, 1, 1);
+	testBlend(im, tim, msk);
 
     // try { testSmartAccessor();}   catch(...) {cout << "testSmartAccessor Failed!" << endl;}
     //try { testScaling(); }        catch(...) {cout << "testScaling Failed!" << endl;}
@@ -438,7 +476,7 @@ int main()
 	// // TODO: replace '1' with your own student number
 	//try { classMorph(34); }        catch(...) {cout << "classMorph Failed!" << endl;}
     //try { testMorph(); }          catch(...) {cout << "testMorph Failed!" << endl;}
-	try { testBlend(); }          catch(...) {cout << "testBlend Failed!" << endl;}
+	// try { testBlend(); }          catch(...) {cout << "testBlend Failed!" << endl;}
 
 
 }
