@@ -14,6 +14,6 @@ The basecode is written by Wojciech Jarosz, but it is heavily derived from (with
 * Adrian Vasile Dalca
 * Neal Wadhwa
 
-###References
+### References
 * Tutorial by Eric Arnebäck https://erkaman.github.io/posts/poisson_blending.html
-* Poisson Image Editing, Patrick Pe ́rez, Michel Gangnet & Andrew Blake, Microsoft Research UK
+* Poisson Image Editing, Patrick Pe ́rez, Michel Gangnet and Andrew Blake, Microsoft Research UK
