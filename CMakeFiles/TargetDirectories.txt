@@ -1,6 +1,0 @@
-/Users/huang/Downloads/CS73-gdcp/CMakeFiles/rebuild_cache.dir
-/Users/huang/Downloads/CS73-gdcp/CMakeFiles/edit_cache.dir
-/Users/huang/Downloads/CS73-gdcp/CMakeFiles/a6.dir
-/Users/huang/Downloads/CS73-gdcp/CMakeFiles/common_lib.dir
-/Users/huang/Downloads/CS73-gdcp/src/ext/CMakeFiles/rebuild_cache.dir
-/Users/huang/Downloads/CS73-gdcp/src/ext/CMakeFiles/edit_cache.dir

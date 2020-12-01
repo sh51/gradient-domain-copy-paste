@@ -4,13 +4,13 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/Users/huang/Downloads/CS73-gdcp/src/floatimage.cpp" "/Users/huang/Downloads/CS73-gdcp/build/CMakeFiles/common_lib.dir/src/floatimage.cpp.o"
+  "/Users/ryantucker/cs73/gradient-domain-copy-paste/src/floatimage.cpp" "/Users/ryantucker/cs73/gradient-domain-copy-paste/build/CMakeFiles/common_lib.dir/src/floatimage.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "AppleClang")
 
 # Preprocessor definitions for this target.
 set(CMAKE_TARGET_DEFINITIONS_CXX
-  "DATA_DIR=R\"(/Users/huang/Downloads/CS73-gdcp/data)\""
+  "DATA_DIR=R\"(/Users/ryantucker/cs73/gradient-domain-copy-paste/data)\""
   )
 
 # The include file search paths:

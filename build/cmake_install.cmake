@@ -1,4 +1,4 @@
-# Install script for directory: /Users/huang/Downloads/CS73-gdcp
+# Install script for directory: /Users/ryantucker/cs73/gradient-domain-copy-paste
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -32,9 +32,14 @@ if(NOT DEFINED CMAKE_CROSSCOMPILING)
   set(CMAKE_CROSSCOMPILING "FALSE")
 endif()
 
+# Set default install directory permissions.
+if(NOT DEFINED CMAKE_OBJDUMP)
+  set(CMAKE_OBJDUMP "/usr/bin/objdump")
+endif()
+
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
-  include("/Users/huang/Downloads/CS73-gdcp/build/src/ext/cmake_install.cmake")
+  include("/Users/ryantucker/cs73/gradient-domain-copy-paste/build/src/ext/cmake_install.cmake")
 
 endif()
 
@@ -46,5 +51,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/Users/huang/Downloads/CS73-gdcp/build/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/Users/ryantucker/cs73/gradient-domain-copy-paste/build/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

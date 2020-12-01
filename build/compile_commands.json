@@ -1,32 +1,12 @@
 [
 {
-  "directory": "/Users/huang/Downloads/CS73-gdcp/build",
-  "command": "/usr/bin/clang++  -DDATA_DIR=\"R\\\"(/Users/huang/Downloads/CS73-gdcp/data)\\\"\" -I/Users/huang/Downloads/CS73-gdcp/src -I/Users/huang/Downloads/CS73-gdcp/src/ext -I/Users/huang/Downloads/CS73-gdcp/src/ext/stb   -Wall -Wextra -Wno-unused-parameter -Wno-ignored-attributes -Wno-gnu-anonymous-struct -Wno-c99-extensions -Wno-nested-anon-types -Wno-deprecated-register -g -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX11.0.sdk   -std=c++11 -o CMakeFiles/a6.dir/src/a6_main.cpp.o -c /Users/huang/Downloads/CS73-gdcp/src/a6_main.cpp",
-  "file": "/Users/huang/Downloads/CS73-gdcp/src/a6_main.cpp"
+  "directory": "/Users/ryantucker/cs73/gradient-domain-copy-paste/build",
+  "command": "/usr/bin/clang++ -DDATA_DIR=\"R\\\"(/Users/ryantucker/cs73/gradient-domain-copy-paste/data)\\\"\" -I/Users/ryantucker/cs73/gradient-domain-copy-paste/src -I/Users/ryantucker/cs73/gradient-domain-copy-paste/src/ext -I/Users/ryantucker/cs73/gradient-domain-copy-paste/src/ext/stb  -Wall -Wextra -Wno-unused-parameter -Wno-ignored-attributes -Wno-gnu-anonymous-struct -Wno-c99-extensions -Wno-nested-anon-types -Wno-deprecated-register -g -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX10.15.sdk -std=c++11 -o CMakeFiles/a6.dir/src/a6_main.cpp.o -c /Users/ryantucker/cs73/gradient-domain-copy-paste/src/a6_main.cpp",
+  "file": "/Users/ryantucker/cs73/gradient-domain-copy-paste/src/a6_main.cpp"
 },
 {
-  "directory": "/Users/huang/Downloads/CS73-gdcp/build",
-  "command": "/usr/bin/clang++  -DDATA_DIR=\"R\\\"(/Users/huang/Downloads/CS73-gdcp/data)\\\"\" -I/Users/huang/Downloads/CS73-gdcp/src -I/Users/huang/Downloads/CS73-gdcp/src/ext -I/Users/huang/Downloads/CS73-gdcp/src/ext/stb   -Wall -Wextra -Wno-unused-parameter -Wno-ignored-attributes -Wno-gnu-anonymous-struct -Wno-c99-extensions -Wno-nested-anon-types -Wno-deprecated-register -g -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX11.0.sdk   -std=c++11 -o CMakeFiles/a6.dir/src/filtering.cpp.o -c /Users/huang/Downloads/CS73-gdcp/src/filtering.cpp",
-  "file": "/Users/huang/Downloads/CS73-gdcp/src/filtering.cpp"
-},
-{
-  "directory": "/Users/huang/Downloads/CS73-gdcp/build",
-  "command": "/usr/bin/clang++  -DDATA_DIR=\"R\\\"(/Users/huang/Downloads/CS73-gdcp/data)\\\"\" -I/Users/huang/Downloads/CS73-gdcp/src -I/Users/huang/Downloads/CS73-gdcp/src/ext -I/Users/huang/Downloads/CS73-gdcp/src/ext/stb   -Wall -Wextra -Wno-unused-parameter -Wno-ignored-attributes -Wno-gnu-anonymous-struct -Wno-c99-extensions -Wno-nested-anon-types -Wno-deprecated-register -g -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX11.0.sdk   -std=c++11 -o CMakeFiles/a6.dir/src/a2.cpp.o -c /Users/huang/Downloads/CS73-gdcp/src/a2.cpp",
-  "file": "/Users/huang/Downloads/CS73-gdcp/src/a2.cpp"
-},
-{
-  "directory": "/Users/huang/Downloads/CS73-gdcp/build",
-  "command": "/usr/bin/clang++  -DDATA_DIR=\"R\\\"(/Users/huang/Downloads/CS73-gdcp/data)\\\"\" -I/Users/huang/Downloads/CS73-gdcp/src -I/Users/huang/Downloads/CS73-gdcp/src/ext -I/Users/huang/Downloads/CS73-gdcp/src/ext/stb   -Wall -Wextra -Wno-unused-parameter -Wno-ignored-attributes -Wno-gnu-anonymous-struct -Wno-c99-extensions -Wno-nested-anon-types -Wno-deprecated-register -g -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX11.0.sdk   -std=c++11 -o CMakeFiles/a6.dir/src/morphing.cpp.o -c /Users/huang/Downloads/CS73-gdcp/src/morphing.cpp",
-  "file": "/Users/huang/Downloads/CS73-gdcp/src/morphing.cpp"
-},
-{
-  "directory": "/Users/huang/Downloads/CS73-gdcp/build",
-  "command": "/usr/bin/clang++  -DDATA_DIR=\"R\\\"(/Users/huang/Downloads/CS73-gdcp/data)\\\"\" -I/Users/huang/Downloads/CS73-gdcp/src -I/Users/huang/Downloads/CS73-gdcp/src/ext -I/Users/huang/Downloads/CS73-gdcp/src/ext/stb   -Wall -Wextra -Wno-unused-parameter -Wno-ignored-attributes -Wno-gnu-anonymous-struct -Wno-c99-extensions -Wno-nested-anon-types -Wno-deprecated-register -g -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX11.0.sdk   -std=c++11 -o CMakeFiles/a6.dir/src/a6.cpp.o -c /Users/huang/Downloads/CS73-gdcp/src/a6.cpp",
-  "file": "/Users/huang/Downloads/CS73-gdcp/src/a6.cpp"
-},
-{
-  "directory": "/Users/huang/Downloads/CS73-gdcp/build",
-  "command": "/usr/bin/clang++  -DDATA_DIR=\"R\\\"(/Users/huang/Downloads/CS73-gdcp/data)\\\"\" -I/Users/huang/Downloads/CS73-gdcp/src -I/Users/huang/Downloads/CS73-gdcp/src/ext -I/Users/huang/Downloads/CS73-gdcp/src/ext/stb   -Wall -Wextra -Wno-unused-parameter -Wno-ignored-attributes -Wno-gnu-anonymous-struct -Wno-c99-extensions -Wno-nested-anon-types -Wno-deprecated-register -g -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX11.0.sdk   -std=c++11 -o CMakeFiles/common_lib.dir/src/floatimage.cpp.o -c /Users/huang/Downloads/CS73-gdcp/src/floatimage.cpp",
-  "file": "/Users/huang/Downloads/CS73-gdcp/src/floatimage.cpp"
+  "directory": "/Users/ryantucker/cs73/gradient-domain-copy-paste/build",
+  "command": "/usr/bin/clang++ -DDATA_DIR=\"R\\\"(/Users/ryantucker/cs73/gradient-domain-copy-paste/data)\\\"\" -I/Users/ryantucker/cs73/gradient-domain-copy-paste/src -I/Users/ryantucker/cs73/gradient-domain-copy-paste/src/ext -I/Users/ryantucker/cs73/gradient-domain-copy-paste/src/ext/stb  -Wall -Wextra -Wno-unused-parameter -Wno-ignored-attributes -Wno-gnu-anonymous-struct -Wno-c99-extensions -Wno-nested-anon-types -Wno-deprecated-register -g -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX10.15.sdk -std=c++11 -o CMakeFiles/common_lib.dir/src/floatimage.cpp.o -c /Users/ryantucker/cs73/gradient-domain-copy-paste/src/floatimage.cpp",
+  "file": "/Users/ryantucker/cs73/gradient-domain-copy-paste/src/floatimage.cpp"
 }
 ]

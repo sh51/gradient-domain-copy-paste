@@ -37,7 +37,7 @@ SOURCE_GROUP("src\\ext\\stb" FILES ${ext_stb_srcs})
 # target_link_libraries(a4 common_lib)                                        # a4
 # SOURCE_GROUP("src" FILES ${a4_srcs})                                        # a4
 #                                                                             # a4
-set(a6_srcs   src/a6_main.cpp src/filtering.cpp src/a2.cpp src/morphing.cpp src/a6.cpp)                 # a6
+set(a6_srcs   src/a6_main.cpp)                                              # a6
 add_executable(a6 ${a6_srcs})                                               # a6
 target_link_libraries(a6 common_lib)                                        # a6
 SOURCE_GROUP("src" FILES ${a6_srcs})                                        # a6
