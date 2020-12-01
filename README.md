@@ -25,4 +25,5 @@ The basecode is written by Wojciech Jarosz, but it is heavily derived from (with
 2. `testMixedBlend()`: a function which demonstrates mixed blending, where the gradient for each pixel is calculated using both source and target image gradients.
 3. `testFlatten()`: a function which demonstrates flattening, where the gradient for each pixel is only calculated across edges, giving the output a 'flat' appearance.
 4. `testColor()`: a function which demonstrates local color changing, where some part of the input image's color is altered, and the part is blended back into the image.
+5. `testLumi()`: a function which demonstrates local luminance changing.
 - The code makes use of the Eigen library for vectors, matrices, and solvers.
