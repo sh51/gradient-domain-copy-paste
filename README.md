@@ -20,7 +20,7 @@ The basecode is written by Wojciech Jarosz, but it is heavily derived from (with
 * Poisson Image Editing, Patrick Pe ́rez, Michel Gangnet and Andrew Blake, Microsoft Research UK
 
 ## Content
-- All functions demonstrating Gradient Domain copy-paste are cointained within the file `a6-main.cpp`, namely `testBlend()`, `testMixedBlend()`, `testFlatten()`, and `testColor()`.
+- All functions demonstrating Gradient Domain copy-paste are cointained within the file `a6-main.cpp`, namely `testBlend()`, `testMixedBlend()`, `testFlatten()`, `testColor()`, and `testLumi()`.
 1. `testBlend()`: a function which demonstrates basic gradient domain copy-pasting using Poisson cloning.
 2. `testMixedBlend()`: a function which demonstrates mixed blending, where the gradient for each pixel is calculated using both source and target image gradients.
 3. `testFlatten()`: a function which demonstrates flattening, where the gradient for each pixel is only calculated across edges, giving the output a 'flat' appearance.
