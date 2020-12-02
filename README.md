@@ -20,10 +20,11 @@ The basecode is written by Wojciech Jarosz, but it is heavily derived from (with
 * Poisson Image Editing, Patrick Pe ́rez, Michel Gangnet and Andrew Blake, Microsoft Research UK
 
 ## Content
-- All functions demonstrating Gradient Domain copy-paste are cointained within the file `a6-main.cpp`, namely `testBlend()`, `testMixedBlend()`, `testFlatten()`, `testColor()`, and `testLumi()`.
+- All functions demonstrating Gradient Domain copy-paste are cointained within the file `a6-main.cpp`, namely `testBlend()`, `poisson_blending_gradient_descent()`, `testMixedBlend()`, `testFlatten()`, and `testColor()`.
 1. `testBlend()`: a function which demonstrates basic gradient domain copy-pasting using Poisson cloning.
-2. `testMixedBlend()`: a function which demonstrates mixed blending, where the gradient for each pixel is calculated using both source and target image gradients.
-3. `testFlatten()`: a function which demonstrates flattening, where the gradient for each pixel is only calculated across edges, giving the output a 'flat' appearance.
-4. `testColor()`: a function which demonstrates local color changing, where some part of the input image's color is altered, and the part is blended back into the image.
-5. `testLumi()`: a function which demonstrates local luminance changing.
+2. `poisson_blending_gradient_descent()`: a function which demonstrates gradient domain copy-pasting using gradient descent, operated in the log domain.
+3. `testMixedBlend()`: a function which demonstrates mixed blending, where the gradient for each pixel is calculated using both source and target image gradients.
+4. `testFlatten()`: a function which demonstrates flattening, where the gradient for each pixel is only calculated across edges, giving the output a 'flat' appearance.
+5. `testColor()`: a function which demonstrates local color changing, where some part of the input image's color is altered, and the part is blended back into the image.
+6. `testLumi()`: a function which demonstrates local luminance changing.
 - The code makes use of the Eigen library for vectors, matrices, and solvers.

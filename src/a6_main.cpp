@@ -821,7 +821,255 @@ void testBlend(){
 	output.write(DATA_DIR "/output/gradient_copy_p.png");
 }
 
+// util functions for gradient descent
+// binary search on pos_map
+int bs(const vector<pair<unsigned int, pair<vector<unsigned int>, vector<float>>>>& pos_map, int l, int r, int x) {
+		if (r >= l) { 
+        int mid = l + (r - l) / 2; 
+        if (pos_map[mid].first == x) 
+            return mid; 
+        if (pos_map[mid].first > x) 
+            return bs(pos_map, l, mid - 1, x); 
+        return bs(pos_map, mid + 1, r, x); 
+    } 
+    return -1; 
+} 
+void set_vector(vector<VectorD>& v, const FloatImage& im, const vector<vector<pair<unsigned int, pair<vector<unsigned int>, vector<float>>>>>& pos_map) {
+	for (int k = 0; k < im.sizeZ(); k++)
+		for (int i = 0; i < pos_map[k].size(); i++)
+			v[k](i) = im(pos_map[k][i].first % im.width(), pos_map[k][i].first / im.width(), k);
+}
+void fill_image(const vector<VectorD>& v, FloatImage& im, const vector<vector<pair<unsigned int, pair<vector<unsigned int>, vector<float>>>>>& pos_map) {
+	for (int k = 0; k < im.sizeZ(); k++) 
+		for (int i = 0; i < pos_map[k].size(); i++) im(pos_map[k][i].first % im.width(), pos_map[k][i].first / im.width(), k) = v[k](i);
+}
+VectorD conv(const VectorD &v, const vector<pair<unsigned int, pair<vector<unsigned int>, vector<float>>>>& pos_map) {
+	VectorD output = v;
+	float val;
+	for (int i = 0; i < pos_map.size(); i++) {
+		val = 4 * v(i);
+		for (int j = 0; j < pos_map[i].second.first.size(); j++) val -= v(pos_map[i].second.first[j]);
+		for (int j = 0; j < pos_map[i].second.second.size(); j++) val -= pos_map[i].second.second[j];
+		output(i) = val;
+	}
+	return output;
+}
+ vector<VectorD> conv_3d(const vector<VectorD> &vs, vector<vector<pair<unsigned int, pair<vector<unsigned int>, vector<float>>>>>& pos_map) {
+	vector<VectorD> output;
+	for (int k = 0; k < vs.size(); k++) output.push_back(conv(vs[k], pos_map[k]));
+	return output;
+}
+void fill_map(vector<vector<pair<unsigned int, pair<vector<unsigned int>, vector<float>>>>>& pos_map, const FloatImage& maskImage, const FloatImage& im) {
+	int width = maskImage.width();
+	for (int i = 0; i < pos_map[0].size(); i++) 
+		for (int k = 0; k < pos_map.size(); k++) {
+			pos_map[k][i].second = make_pair(vector<unsigned int>(), vector<float>());
+			int mx = pos_map[k][i].first % width;
+			int my = pos_map[k][i].first / width;
+			if (maskImage(mx-1,my,k)<0.9f) pos_map[k][i].second.second.push_back(im(mx - 1,my,k));
+			else pos_map[k][i].second.first.push_back(i - 1);
+			if (maskImage(mx+1,my,k)<0.9f) pos_map[k][i].second.second.push_back(im(mx + 1,my,k));
+			else pos_map[k][i].second.first.push_back(i + 1);
+			if (maskImage(mx,my-1,k)<0.9f) pos_map[k][i].second.second.push_back(im(mx,my - 1,k));
+			else pos_map[k][i].second.first.push_back(bs(pos_map[k], 0, pos_map[0].size() - 1, pos_map[k][i].first - width));
+			if (maskImage(mx,my+1,k)<0.9f) pos_map[k][i].second.second.push_back(im(mx,my + 1,k));
+			else pos_map[k][i].second.first.push_back(bs(pos_map[k], 0, pos_map[0].size() - 1, pos_map[k][i].first + width));
+		}
+}
 
+//poisson blending: assuming boundary of the masked area does not overlap with boundary of the target image
+void poisson_blending_gradient_descent() {
+	//load images	
+	FloatImage sourceImage(DATA_DIR "/input/a6/source_p.png");
+	FloatImage targetImage(DATA_DIR "/input/a6/target_p.png");
+	FloatImage maskImage(DATA_DIR "/input/a6/mask_p.png");
+	sourceImage = log10FloatImage(sourceImage);
+	targetImage = log10FloatImage(targetImage);
+	// FloatImage sourceImage(DATA_DIR "/input/a6/src.png");
+	// FloatImage targetImage(DATA_DIR "/input/a6/tar.png");
+	// FloatImage maskImage(DATA_DIR "/input/a6/msk.png");
+	FloatImage output(targetImage);
+
+	int iter = 10000, start_from = 0;
+	// real coord, internal coords, boundary values
+	vector<vector<pair<unsigned int, pair<vector<unsigned int>, vector<float>>>>> pos_map;
+	int marked_pixel, width = maskImage.width();
+	vector<VectorD> b, t, r, tmp;
+
+	// construct the position map for the target area
+		// initialize pos_map
+	for (int k = 0; k < targetImage.sizeZ(); k++) pos_map.push_back(vector<pair<unsigned int, pair<vector<unsigned int>, vector<float>>>>());
+		// save all the masked coords at first slots
+	for(int y=0;y<maskImage.height();y++)
+		for(int x=0;x<maskImage.width();x++) {
+			marked_pixel = y*maskImage.width()+x;
+			if(maskImage(x,y,0)>0.9f)
+				for (int k = 0; k < targetImage.sizeZ(); k++)
+					pos_map[k].push_back(make_pair(marked_pixel, make_pair(vector<unsigned int>(), vector<float>())));
+		}
+	cout<< "pos_map constructed: "<< pos_map.size()<< " channels."<< endl;
+
+	// initialize vectors
+	for (int k = 0; k < targetImage.sizeZ(); k++) {
+		b.push_back(VectorD());
+		b[k].resize(pos_map[0].size());
+		t.push_back(VectorD());
+		t[k].resize(pos_map[0].size());
+		r.push_back(VectorD());
+		r[k].resize(pos_map[0].size());
+		tmp.push_back(VectorD());
+		tmp[k].resize(pos_map[0].size());
+	}
+
+	// calculate b
+	set_vector(b, sourceImage, pos_map);
+		// fill in pos_map for b
+	fill_map(pos_map, maskImage, sourceImage);
+	b = conv_3d(b, pos_map);
+	// save a preview of b
+	FloatImage sourceImage_conv(sourceImage);
+	fill_image(b, sourceImage_conv, pos_map);
+	exp10FloatImage(sourceImage_conv).write(DATA_DIR "/output/gradient_b.png");
+	
+	// initiate t_0: if start_from is specified, then load t_start_from
+	if (start_from) {
+		output = FloatImage(DATA_DIR "/output/log_gradient_descent_" + to_string(start_from) + ".png");
+		set_vector(t, output, pos_map);
+	} else {
+		for (int k = 0; k < targetImage.sizeZ(); k++) 
+			for (int i = 0; i < pos_map[k].size(); i++) t[k](i) = 0;	
+	// save a preview of t_0
+		fill_image(t, output, pos_map);
+		exp10FloatImage(output).write(DATA_DIR "/output/log_gradient_descent_0.png");
+	}
+	// gradient descent
+		// fill in pos_map for t
+	fill_map(pos_map, maskImage, targetImage);
+	for (size_t i = start_from + 1; i <= iter; i++) {
+		// At_i -> tmp
+		tmp = conv_3d(t, pos_map);
+		// r_i
+		for (int k = 0; k < output.sizeZ(); k++) r[k] = b[k] - tmp[k];
+		// A^Tr_i -> tmp
+		tmp = conv_3d(r, pos_map);
+		// t_i -> t_i+1
+		for (int k = 0; k < output.sizeZ(); k++) 
+			t[k] = t[k] + (float)(r[k].transpose() * r[k])/(float)(r[k].transpose() * tmp[k]) * r[k];
+		cout<< "iter: "<< i<< endl;
+		if (!(i % 100)) {
+			fill_image(t, output, pos_map);
+			exp10FloatImage(output).write(DATA_DIR "/output/log_gradient_descent_" + to_string(i) + ".png");
+		}
+	}
+}
+// conjugate gradient
+void poisson_blending_conjugate_gradient() {
+	//load images	
+	FloatImage sourceImage(DATA_DIR "/input/a6/source_p.png");
+	FloatImage targetImage(DATA_DIR "/input/a6/target_p.png");
+	FloatImage maskImage(DATA_DIR "/input/a6/mask_p.png");
+	sourceImage = log10FloatImage(sourceImage);
+	targetImage = log10FloatImage(targetImage);
+	FloatImage output(targetImage);
+
+	int iter = 6000, start_from = 0;
+	// real coord, internal coords, boundary values
+	vector<vector<pair<unsigned int, pair<vector<unsigned int>, vector<float>>>>> pos_map;
+	int marked_pixel, width = maskImage.width();
+	vector<VectorD> b, t, r, tmp, w, z;
+	vector<float> a;
+
+	// construct the position map for the target area
+		// initialize pos_map
+	for (int k = 0; k < targetImage.sizeZ(); k++) pos_map.push_back(vector<pair<unsigned int, pair<vector<unsigned int>, vector<float>>>>());
+		// save all the masked coords at first slots
+	for(int y=0;y<maskImage.height();y++)
+		for(int x=0;x<maskImage.width();x++) {
+			marked_pixel = y*maskImage.width()+x;
+			if(maskImage(x,y,0)>0.9f)
+				for (int k = 0; k < targetImage.sizeZ(); k++)
+					pos_map[k].push_back(make_pair(marked_pixel, make_pair(vector<unsigned int>(), vector<float>())));
+		}
+	cout<< "pos_map constructed: "<< pos_map.size()<< " channels."<< endl;
+
+	// initialize vectors
+	for (int k = 0; k < targetImage.sizeZ(); k++) {
+		b.push_back(VectorD());
+		b[k].resize(pos_map[0].size());
+		t.push_back(VectorD());
+		t[k].resize(pos_map[0].size());
+		r.push_back(VectorD());
+		r[k].resize(pos_map[0].size());
+		tmp.push_back(VectorD());
+		tmp[k].resize(pos_map[0].size());
+		w.push_back(VectorD());
+		w[k].resize(pos_map[0].size());
+		z.push_back(VectorD());
+		z[k].resize(pos_map[0].size());
+		a.push_back(0);
+	}
+
+	// calculate b
+	set_vector(b, sourceImage, pos_map);
+		// fill in pos_map for b
+	fill_map(pos_map, maskImage, sourceImage);
+	b = conv_3d(b, pos_map);
+	
+	// initial t: a random guess
+	if (start_from) {
+		output = FloatImage(DATA_DIR "/output/cg_gradient_descent_" + to_string(start_from) + ".png");
+		set_vector(t, output, pos_map);
+	} else {
+		for (int k = 0; k < targetImage.sizeZ(); k++) 
+			for (int i = 0; i < pos_map[k].size(); i++) t[k](i) = 0;	
+	}
+
+	// fill in pos_map for t
+	fill_map(pos_map, maskImage, targetImage);
+	// r0, w0
+		// At_i -> tmp
+	tmp = conv_3d(t, pos_map);
+	for (int k = 0; k < output.sizeZ(); k++) {
+		r[k] = b[k] - tmp[k];
+		w[k] = -r[k];
+	}
+	// z
+	z = conv_3d(w, pos_map);
+	// a
+	cout<< "getting a!"<< endl;
+	for (int k = 0; k < output.sizeZ(); k++) a[k] = (float)(r[k].transpose() * w[k])/(float)(w[k].transpose() * z[k]);
+	cout<< "got a!"<< endl;
+	// t0
+	for (int k = 0; k < output.sizeZ(); k++) t[k] = t[k] + a[k] * w[k];
+	cout<< "entering cg"<< endl;
+	// conjugate gradient
+	for (size_t i = start_from + 1; i <= iter; i++) {
+		unsigned int err_sum = 0;
+		// r_i+1
+		for (int k = 0; k < output.sizeZ(); k++) {
+			r[k] = r[k] - a[k] * z[k];
+			err_sum += r[k].norm();
+		}
+		// return condition
+		if (err_sum < 1e-10) break;
+		// w_i+1
+		for (int k = 0; k < output.sizeZ(); k++)
+			w[k] = -r[k] + (float)(r[k].transpose()*z[k])/(float)(w[k].transpose()*z[k])*w[k];
+		// z_i+1
+		z = conv_3d(w, pos_map);
+		// a_i+1
+		for (int k = 0; k < output.sizeZ(); k++) 
+			a[k] = (float)(r[k].transpose() * w[k])/(float)(w[k].transpose() * z[k]);
+		// t_i -> t_i+1
+		for (int k = 0; k < output.sizeZ(); k++) 
+			t[k] = t[k] + a[k]*w[k];
+		cout<< "iter: "<< i<< endl;
+		if (!(i % 100)) {
+			fill_image(t, output, pos_map);
+			exp10FloatImage(output).write(DATA_DIR "/output/cg_gradient_descent_" + to_string(i) + ".png");
+		}
+	}
+}
 
 int main()
 {
@@ -835,12 +1083,12 @@ int main()
 	// // TODO: replace '1' with your own student number
 	//try { classMorph(34); }        catch(...) {cout << "classMorph Failed!" << endl;}
     //try { testMorph(); }          catch(...) {cout << "testMorph Failed!" << endl;}
-	//try { testBlend(); }          catch(...) {cout << "testBlend Failed!" << endl;}
-	//try { testMixedBlend(); }          catch(...) {cout << "testmixedBlend Failed!" << endl;}
-	//try { testFlatten(); }          catch(...) {cout << "testmixedBlend Failed!" << endl;}
-	try { testColor(); }          catch(...) {cout << "testColor Failed!" << endl;}
-	//try { testLumi(); }          catch(...) {cout << "testLumi Failed!" << endl;}
-
+	// try { testBlend(); }          catch(...) {cout << "testBlend Failed!" << endl;}
+	// try { testMixedBlend(); }          catch(...) {cout << "testmixedBlend Failed!" << endl;}
+	// try { testFlatten(); }          catch(...) {cout << "testmixedBlend Failed!" << endl;}
+	// try { testColor(); }          catch(...) {cout << "testColor Failed!" << endl;}
+	// try { testLumi(); }          catch(...) {cout << "testLumi Failed!" << endl;}
+	try { poisson_blending_gradient_descent(); }	catch(...) {cout << "poisson_blending_gradient_descent Failed!" << endl;}
 
 	
 
