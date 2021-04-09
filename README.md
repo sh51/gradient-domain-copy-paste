@@ -5,6 +5,8 @@ This project uses base code from Dartmouth's Fall 2020 offering of CS 73/273 - "
  
 See course [website](https://canvas.dartmouth.edu/courses/43075) for details.
 
+Final presentation [website](https://docs.google.com/presentation/d/1mRlbEP9puaESHQSG6Zz9kIsjdmanST-bD5DV9bQyqQM/edit?usp=sharing)
+
 ## Credits
 The basecode is written by Wojciech Jarosz, but it is heavily derived from (with permission):
 
